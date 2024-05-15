@@ -54,7 +54,7 @@ func determina_tipo():
 			return
 		
 	#(4) Se Dx è PIATTAFORMA e sotto e sopra è aria, diventa piattaforma
-	if are_cells_stato([4], Init.tipi.PLATFORM, true) and are_cells_stato([6, 1], Init.tipi.ARIA, true ) and not are_cells_stato([3], Init.tipi.EDGE_DOWN):
+	if are_cells_stato([4], Init.tipi.PLATFORM, true) and are_cells_stato([6, 1], Init.tipi.ARIA, true ) and not are_cells_stato([3], [Init.tipi.EDGE_DOWN, Init.tipi.VERTICALE]):
 		if not (are_cells_stato([0], [Init.tipi.PLATFORM, Init.tipi.PLATFORM_OBSTACLE, Init.tipi.PLATFORM_OBSTACLE_DOWN, Init.tipi.VERTICALE], true) or are_cells_stato([2], [Init.tipi.PLATFORM, Init.tipi.PLATFORM_OBSTACLE, Init.tipi.PLATFORM_OBSTACLE_DOWN, Init.tipi.VERTICALE], true)):
 			if probabilita_diventi_tipo(40.0, Init.tipi.PLATFORM):
 				return
@@ -66,9 +66,15 @@ func determina_tipo():
 				return
 
 	#(6) Se VSx, Sx è platform & Dx aria, % diventa EDGE 
-	if(are_cells_stato([3, 15], Init.tipi.PLATFORM, true)):
+	if(are_cells_stato([3, 15], Init.tipi.PLATFORM, true) and are_cells_stato([1], Init.tipi.ARIA)):
 		if are_cells_stato([4], Init.tipi.ARIA):
 			if probabilita_diventi_tipo(60.0, Init.tipi.EDGE_DOWN):
+				return
+				
+	#() Se VSx, Sx è platform & Dx aria, % diventa EDGE 
+	if(are_cells_stato([4, 16], Init.tipi.PLATFORM, true) and are_cells_stato([1], Init.tipi.ARIA)):
+		if are_cells_stato([3], Init.tipi.ARIA):
+			if probabilita_diventi_tipo(60.0, Init.tipi.EDGE_DOWN_SX):
 				return
 	
 	#(7) Se Sx Dx è platform, può diventare ostacolo. Ostacolo 50% Up 50% Down
@@ -80,8 +86,8 @@ func determina_tipo():
 			
 	#(8) Verticale se sopra PLATFORM_OBSTACLE_DOWN down e EDGE DOWN e sotto aria e lontano da platform
 	#	 Se VG hs un PLATFORM_OBSTACLE EDGE_DOWN PLATFORM -> più probabile VER|TICAlE
-	if are_cells_stato([1], [Init.tipi.PLATFORM_OBSTACLE_DOWN, Init.tipi.EDGE_DOWN], true) and are_cells_stato([6], Init.tipi.ARIA):
-		if are_cells_stato([21], [Init.tipi.PLATFORM_OBSTACLE, Init.tipi.EDGE_DOWN, Init.tipi.PLATFORM]):
+	if are_cells_stato([1], [Init.tipi.PLATFORM_OBSTACLE_DOWN, Init.tipi.EDGE_DOWN, Init.tipi.EDGE_DOWN_SX], true) and are_cells_stato([6], Init.tipi.ARIA):
+		if are_cells_stato([21], [Init.tipi.PLATFORM_OBSTACLE, Init.tipi.EDGE_DOWN, Init.tipi.EDGE_DOWN_SX, Init.tipi.PLATFORM]):
 			set_tipo(Init.tipi.VERTICALE)
 			return
 		else:
@@ -99,7 +105,7 @@ func determina_tipo():
 	var cond3 = are_cells_stato([18], Init.tipi.PLATFORM_OBSTACLE, true)
 	if are_cells_stato([5], Init.tipi.PLATFORM_OBSTACLE, true) or cond1 or cond2 or cond3:
 		if not (are_cells_stato([4], Init.tipi.NEMICO) or are_cells_stato([3], Init.tipi.NEMICO)):
-			probabilita_diventi_tipo(30.0, Init.tipi.NEMICO)
+			probabilita_diventi_tipo(60.0, Init.tipi.NEMICO)
 	
 	#Regole x RAMPE MURO
 	
@@ -145,7 +151,7 @@ func correggi():
 		set_tipo(Init.tipi.ARIA)
 	
 	#Controllo se VERTICALE compatibile con vicinato
-	if self.tipo == Init.tipi.VERTICALE and ( (not are_cells_stato([6], Init.tipi.PLATFORM_OBSTACLE) or not are_cells_stato([1], Init.tipi.ARIA)) and (not are_cells_stato([6], Init.tipi.ARIA) or not are_cells_stato([1], [Init.tipi.PLATFORM_OBSTACLE_DOWN, Init.tipi.EDGE_DOWN], true))):
+	if self.tipo == Init.tipi.VERTICALE and ( (not are_cells_stato([6], Init.tipi.PLATFORM_OBSTACLE) or not are_cells_stato([1], Init.tipi.ARIA)) and (not are_cells_stato([6], Init.tipi.ARIA) or not are_cells_stato([1], [Init.tipi.PLATFORM_OBSTACLE_DOWN, Init.tipi.EDGE_DOWN, Init.tipi.EDGE_DOWN_SX], true))):
 		set_tipo(Init.tipi.ARIA)
 	
 	#Se Sx è PIATTAFORMA && VSx ARIA -> Piattaforma
@@ -180,11 +186,17 @@ func correggi():
 	#Se EDGE ha a Dx ≠ ARIA -> ARIA 
 	if self.tipo == Init.tipi.EDGE_DOWN and (not are_cells_stato([4], Init.tipi.ARIA) or not are_cells_stato([3], Init.tipi.PLATFORM)):
 		set_tipo(Init.tipi.ARIA)
+		
+	#Se EDGE ha a Sx ≠ ARIA -> ARIA 
+	if self.tipo == Init.tipi.EDGE_DOWN_SX and (not are_cells_stato([3], Init.tipi.ARIA) or not are_cells_stato([4], Init.tipi.PLATFORM)):
+		set_tipo(Init.tipi.ARIA)
 	
 	#Se NEMICO ha S = ARIA -> ARIA
 	if self.tipo == Init.tipi.NEMICO and are_cells_stato([6], Init.tipi.ARIA):
 		set_tipo(Init.tipi.ARIA)
-		
+	
+	#Se è famiblia PLATFORM e ha in NW o NE altre piattaforme si cancella
+	# + se a W o E ha Verticale si cancella
 	if are_cells_stato([-1],  [Init.tipi.PLATFORM, Init.tipi.PLATFORM_OBSTACLE, Init.tipi.PLATFORM_OBSTACLE_DOWN]):
 		if are_cells_stato([0], [Init.tipi.PLATFORM, Init.tipi.PLATFORM_OBSTACLE, Init.tipi.PLATFORM_OBSTACLE_DOWN]) or are_cells_stato([2], [Init.tipi.PLATFORM, Init.tipi.PLATFORM_OBSTACLE, Init.tipi.PLATFORM_OBSTACLE_DOWN]):
 			set_tipo(Init.tipi.ARIA)

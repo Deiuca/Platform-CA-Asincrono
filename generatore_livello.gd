@@ -17,6 +17,7 @@ var tipi_livello = {
 	Init.tipi.PLATFORM: Init.piattaforma,
 	Init.tipi.PLATFORM_OBSTACLE : Init.piattaforma_ostacolo,
 	Init.tipi.EDGE_DOWN : Init.edge_down,
+	Init.tipi.EDGE_DOWN_SX : Init.edge_down_sx,
 	Init.tipi.PLATFORM_OBSTACLE_DOWN : Init.piattaforma_ostacolo_down,
 	Init.tipi.MURO_RAMPA_DOWN : Init.muro_rampa_down,
 	Init.tipi.MURO_RAMPA_UP : Init.muro_rampa_up,
@@ -137,18 +138,19 @@ func _ready():
 		self.livello.add_child(self.celle[i])
 
 var test_counter = 0
-var numero_CA = 8
+var numero_CA = 6
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if self.test_counter < self.numero_CA:
 		cellular_automata()
+		for i in range(self.celle.size()):
+			self.celle[i].correggi()
 		self.test_counter += 1
 	if self.test_counter == (self.numero_CA):
 		for i in range(self.celle.size()):
 			self.celle[i].correggi()
+			pass
 			#Per evitare che corregga in continuazione
-		for i in range(self.celle.size()):
-			self.celle[i].correggi()
 		self.test_counter += 1
 
 #Determina il nuovo stato delle celle

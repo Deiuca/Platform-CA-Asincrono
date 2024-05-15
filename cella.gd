@@ -71,20 +71,20 @@ func determina_tipo():
 			if probabilita_diventi_tipo(60.0, Init.tipi.EDGE_DOWN):
 				return
 				
-	#() Se VSx, Sx è platform & Dx aria, % diventa EDGE 
+	#(7) Se EE, E è platform & Dx aria, % diventa EDGE 
 	if(are_cells_stato([4, 16], Init.tipi.PLATFORM, true) and are_cells_stato([1], Init.tipi.ARIA)):
 		if are_cells_stato([3], Init.tipi.ARIA):
 			if probabilita_diventi_tipo(60.0, Init.tipi.EDGE_DOWN_SX):
 				return
 	
-	#(7) Se Sx Dx è platform, può diventare ostacolo. Ostacolo 50% Up 50% Down
+	#(8) Se Sx Dx è platform, può diventare ostacolo. Ostacolo 50% Up 50% Down
 	if(are_cells_stato([3,4], Init.tipi.PLATFORM, true)):
 		if determina_se_accade(25.0):
 			if not probabilita_diventi_tipo(50.0, Init.tipi.PLATFORM_OBSTACLE):
 				set_tipo(Init.tipi.PLATFORM_OBSTACLE_DOWN)
 			return
 			
-	#(8) Verticale se sopra PLATFORM_OBSTACLE_DOWN down e EDGE DOWN e sotto aria e lontano da platform
+	#(9) Verticale se sopra PLATFORM_OBSTACLE_DOWN down e EDGE DOWN e sotto aria e lontano da platform
 	#	 Se VG hs un PLATFORM_OBSTACLE EDGE_DOWN PLATFORM -> più probabile VER|TICAlE
 	if are_cells_stato([1], [Init.tipi.PLATFORM_OBSTACLE_DOWN, Init.tipi.EDGE_DOWN, Init.tipi.EDGE_DOWN_SX], true) and are_cells_stato([6], Init.tipi.ARIA):
 		if are_cells_stato([21], [Init.tipi.PLATFORM_OBSTACLE, Init.tipi.EDGE_DOWN, Init.tipi.EDGE_DOWN_SX, Init.tipi.PLATFORM]):
@@ -94,12 +94,12 @@ func determina_tipo():
 			if probabilita_diventi_tipo(15.0, Init.tipi.VERTICALE):
 					return
 	
-	#(9) Verticale se sotto PLATFORM_OBSTACLE
+	#(10) Verticale se sotto PLATFORM_OBSTACLE
 	if are_cells_stato([6], Init.tipi.PLATFORM_OBSTACLE, true):
 		if probabilita_diventi_tipo(40.0, Init.tipi.VERTICALE):
 				return
 	
-	#(10) Se VSx o Sx o VDx o Dx -> % NEMICO
+	#(11) Se VSx o Sx o VDx o Dx -> % NEMICO
 	var cond1 = are_cells_stato([7], Init.tipi.PLATFORM_OBSTACLE, true)
 	var cond2 = are_cells_stato([17], Init.tipi.PLATFORM_OBSTACLE, true)
 	var cond3 = are_cells_stato([18], Init.tipi.PLATFORM_OBSTACLE, true)
@@ -109,15 +109,15 @@ func determina_tipo():
 	
 	#Regole x RAMPE MURO
 	
-	#(11) Se Sx MURO; Dx ARIA; S MURO; SDx NON MURO 
+	#(12) Se Sx MURO; Dx ARIA; S MURO; SDx NON MURO 
 	if are_cells_stato([3], Init.tipi.MURO) and are_cells_stato([4], Init.tipi.ARIA) and are_cells_stato([6], Init.tipi.MURO, true) and  not are_cells_stato([7], Init.tipi.MURO_RAMPA_DOWN, true) :
 		probabilita_diventi_tipo(40.0, Init.tipi.MURO_RAMPA_DOWN)
 	
-	#(12) Se Dx MURO; Sx ARIA; S MURO; SSx NON MURO 
+	#(13) Se Dx MURO; Sx ARIA; S MURO; SSx NON MURO 
 	if are_cells_stato([4], Init.tipi.MURO) and are_cells_stato([3], Init.tipi.ARIA) and are_cells_stato([6], Init.tipi.MURO, true) and not are_cells_stato([5], Init.tipi.MURO_RAMPA_UP, true):
 		probabilita_diventi_tipo(40.0, Init.tipi.MURO_RAMPA_UP)
 	
-	#(13) Se Dx e SX MURO -> MURO
+	#(14) Se Dx e SX MURO -> MURO
 	if are_cells_stato([4], Init.tipi.MURO) and are_cells_stato([3], Init.tipi.MURO):
 		set_tipo(Init.tipi.MURO)
 

@@ -155,7 +155,7 @@ func correggi():
 		set_tipo(Init.tipi.ARIA)
 	
 	#Se Sx è PIATTAFORMA && VSx ARIA -> Piattaforma
-	if self.tipo == Init.tipi.ARIA  and are_cells_stato([3], Init.tipi.PLATFORM, true) and are_cells_stato([15], Init.tipi.ARIA, true):
+	if self.tipo == Init.tipi.ARIA  and are_cells_stato([3], Init.tipi.PLATFORM, true) and are_cells_stato([15], Init.tipi.ARIA, true) and not are_cells_stato([4], Init.tipi.EDGE_DOWN_SX):
 		set_tipo(Init.tipi.PLATFORM)
 		
 	#Se Dx è PIATTAFORMA && VDx ARIA -> Piattaforma
@@ -167,11 +167,11 @@ func correggi():
 		self.vicini[1].set_tipo(Init.tipi.ARIA)
 	
 	#Se piattaforma isolata -> ARIA
-	if self.tipo == Init.tipi.PLATFORM and num_vicini_aria == 8:
+	if self.tipo == Init.tipi.PLATFORM and are_cells_stato([3,4], Init.tipi.ARIA):
 		set_tipo(Init.tipi.ARIA)
 	
 	#Se piattaform like e isolata -> ARIA
-	if self.tipo == Init.tipi.PLATFORM or self.tipo == Init.tipi.VERTICALE or self.tipo == Init.tipi.PLATFORM_OBSTACLE or self.tipo == Init.tipi.PLATFORM_OBSTACLE_DOWN or self.tipo == Init.tipi.EDGE_DOWN:
+	if self.tipo == Init.tipi.PLATFORM or self.tipo == Init.tipi.VERTICALE or self.tipo == Init.tipi.PLATFORM_OBSTACLE or self.tipo == Init.tipi.PLATFORM_OBSTACLE_DOWN or self.tipo == Init.tipi.EDGE_DOWN or self.tipo == Init.tipi.EDGE_DOWN_SX:
 		if num_vicini_muro > 0 or num_vicini_rampa_down > 0 or num_vicini_rampa_up >0 or num_vicini_allargati_muro > 0:
 			set_tipo(Init.tipi.ARIA)
 	
@@ -195,6 +195,10 @@ func correggi():
 	if self.tipo == Init.tipi.NEMICO and are_cells_stato([6], Init.tipi.ARIA):
 		set_tipo(Init.tipi.ARIA)
 	
+	#Se ARIA è tra N e S MURI -> MURO
+	if self.tipo == Init.tipi.ARIA and are_cells_stato([1,6], Init.tipi.MURO):
+		set_tipo(Init.tipi.MURO)
+
 	#Se è famiblia PLATFORM e ha in NW o NE altre piattaforme si cancella
 	# + se a W o E ha Verticale si cancella
 	if are_cells_stato([-1],  [Init.tipi.PLATFORM, Init.tipi.PLATFORM_OBSTACLE, Init.tipi.PLATFORM_OBSTACLE_DOWN]):

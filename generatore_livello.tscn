@@ -7,3 +7,5 @@
 position = Vector2(2.08165e-12, 2.08165e-12)
 script = ExtResource("1_4u7bi")
 cella_template = ExtResource("2_2h3oo")
+height = 40
+width = 40

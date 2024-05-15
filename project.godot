@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Platform Celluar Automata Sequenziale"
+config/name="Platform Celluar Automata Asincrono"
 run/main_scene="res://progetto.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
@@ -18,3 +18,8 @@ config/icon="res://icon.svg"
 [autoload]
 
 Init="*res://Init.gd"
+
+[display]
+
+window/size/viewport_width=2000
+window/size/viewport_height=1500

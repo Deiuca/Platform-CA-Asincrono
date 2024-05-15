@@ -137,7 +137,7 @@ func _ready():
 		self.livello.add_child(self.celle[i])
 
 var test_counter = 0
-var numero_CA = 12
+var numero_CA = 8
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if self.test_counter < self.numero_CA:
@@ -146,6 +146,8 @@ func _process(delta):
 	if self.test_counter == (self.numero_CA):
 		for i in range(self.celle.size()):
 			self.celle[i].correggi()
+			#Per evitare che corregga in continuazione
+			self.test_counter += 1
 
 #Determina il nuovo stato delle celle
 func cellular_automata():

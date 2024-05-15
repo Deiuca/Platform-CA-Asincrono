@@ -39,7 +39,7 @@ func determina_tipo():
 	#(1) Se tutti vicini sono ARIA % diventi platform
 	if (num_vicini_aria + num_vicini_allargati_aria) == 24 :
 		if( self.tipo == Init.tipi.ARIA ):
-			probabilita_diventi_tipo(0.5, Init.tipi.PLATFORM)
+			probabilita_diventi_tipo(1.5, Init.tipi.PLATFORM)
 			return
 	
 	#(2) Se Gsx G Gdx sono muro % diventi muro
@@ -56,19 +56,19 @@ func determina_tipo():
 	#(4) Se Dx è PIATTAFORMA e sotto e sopra è aria, diventa piattaforma
 	if are_cells_stato([4], Init.tipi.PLATFORM, true) and are_cells_stato([6, 1], Init.tipi.ARIA, true ) and not are_cells_stato([3], Init.tipi.EDGE_DOWN):
 		if not (are_cells_stato([0], [Init.tipi.PLATFORM, Init.tipi.PLATFORM_OBSTACLE, Init.tipi.PLATFORM_OBSTACLE_DOWN, Init.tipi.VERTICALE], true) or are_cells_stato([2], [Init.tipi.PLATFORM, Init.tipi.PLATFORM_OBSTACLE, Init.tipi.PLATFORM_OBSTACLE_DOWN, Init.tipi.VERTICALE], true)):
-			if probabilita_diventi_tipo(30.0, Init.tipi.PLATFORM):
+			if probabilita_diventi_tipo(40.0, Init.tipi.PLATFORM):
 				return
 	
 	#(5) Se Sx è PIATTAFORMA e sotto e sopra è aria, diventa % PLATFORM
 	if are_cells_stato([3], Init.tipi.PLATFORM, true) and are_cells_stato([6, 1], Init.tipi.ARIA, true):
 		if not (are_cells_stato([0], [Init.tipi.PLATFORM, Init.tipi.PLATFORM_OBSTACLE, Init.tipi.PLATFORM_OBSTACLE_DOWN, Init.tipi.VERTICALE], true) or are_cells_stato([2], [Init.tipi.PLATFORM, Init.tipi.PLATFORM_OBSTACLE, Init.tipi.PLATFORM_OBSTACLE_DOWN, Init.tipi.VERTICALE], true)):
-			if probabilita_diventi_tipo(30.0, Init.tipi.PLATFORM):
+			if probabilita_diventi_tipo(40.0, Init.tipi.PLATFORM):
 				return
 
 	#(6) Se VSx, Sx è platform & Dx aria, % diventa EDGE 
 	if(are_cells_stato([3, 15], Init.tipi.PLATFORM, true)):
 		if are_cells_stato([4], Init.tipi.ARIA):
-			if probabilita_diventi_tipo(40.0, Init.tipi.EDGE_DOWN):
+			if probabilita_diventi_tipo(60.0, Init.tipi.EDGE_DOWN):
 				return
 	
 	#(7) Se Sx Dx è platform, può diventare ostacolo. Ostacolo 50% Up 50% Down
@@ -187,6 +187,8 @@ func correggi():
 		
 	if are_cells_stato([-1],  [Init.tipi.PLATFORM, Init.tipi.PLATFORM_OBSTACLE, Init.tipi.PLATFORM_OBSTACLE_DOWN]):
 		if are_cells_stato([0], [Init.tipi.PLATFORM, Init.tipi.PLATFORM_OBSTACLE, Init.tipi.PLATFORM_OBSTACLE_DOWN]) or are_cells_stato([2], [Init.tipi.PLATFORM, Init.tipi.PLATFORM_OBSTACLE, Init.tipi.PLATFORM_OBSTACLE_DOWN]):
+			set_tipo(Init.tipi.ARIA)
+		if are_cells_stato([3], Init.tipi.VERTICALE) or are_cells_stato([4], Init.tipi.VERTICALE):
 			set_tipo(Init.tipi.ARIA)
 
 func are_cells_stato(array_celle , tipo , devono_esistere = false) -> bool:

@@ -147,7 +147,9 @@ func _process(delta):
 		for i in range(self.celle.size()):
 			self.celle[i].correggi()
 			#Per evitare che corregga in continuazione
-			self.test_counter += 1
+		for i in range(self.celle.size()):
+			self.celle[i].correggi()
+		self.test_counter += 1
 
 #Determina il nuovo stato delle celle
 func cellular_automata():

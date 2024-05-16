@@ -149,7 +149,6 @@ func _process(delta):
 	if self.test_counter == (self.numero_CA):
 		for i in range(self.celle.size()):
 			self.celle[i].correggi()
-			#Per evitare che corregga in continuazione
 		self.test_counter += 1
 
 #Determina il nuovo stato delle celle

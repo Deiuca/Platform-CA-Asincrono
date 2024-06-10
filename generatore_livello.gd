@@ -39,7 +39,7 @@ func _ready():
 	
 	#Setta il seed del Generatore Randomico
 	self.randomGenerator.set_seed(self.generator_seed)
-	print(generator_seed)
+	#print(generator_seed)
 	
 	#Determina la scala delle Celle in base alla dimensione delle texture
 	var tex_size = self.tipi_livello[self.tipi_livello.keys()[0]].get_size()
@@ -60,6 +60,8 @@ func _ready():
 	for indx in range(self.celle.size()):
 		var cella = self.celle[indx]      
 		#Pattern dei viini: SuSx, Su, SuDx, Sx, Dx, GiuSx, Giu, GiuDx
+		#Pattern: NW ,N, NE, W, E, SW, S, SE.
+		
 		#Sx
 		if (indx-1) >= 0 and indx/self.width == (indx-1)/self.width:
 			cella.vicini[3] = self.celle[indx-1]
@@ -136,20 +138,25 @@ func _ready():
 	for i in range(self.celle.size()):
 		self.celle[i].label.text = str(i)
 		self.livello.add_child(self.celle[i])
+	
+	var test_counter = 0
+	var numero_CA = 6
+	while test_counter < numero_CA:
+		cellular_automata()
+		for i in range(self.celle.size()):
+			self.celle[i].correggi()
+		test_counter += 1
+	if test_counter == (numero_CA):
+		for i in range(self.celle.size()):
+			self.celle[i].correggi()
+		test_counter += 1
+	
 
 var test_counter = 0
 var numero_CA = 6
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if self.test_counter < self.numero_CA:
-		cellular_automata()
-		for i in range(self.celle.size()):
-			self.celle[i].correggi()
-		self.test_counter += 1
-	if self.test_counter == (self.numero_CA):
-		for i in range(self.celle.size()):
-			self.celle[i].correggi()
-		self.test_counter += 1
+	pass
 
 #Determina il nuovo stato delle celle
 func cellular_automata():

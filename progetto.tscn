@@ -8,4 +8,3 @@ script = ExtResource("1_i0e53")
 
 [node name="Generatore_livello" parent="." instance=ExtResource("1_clrtm")]
 position = Vector2(22, 20)
-generator_seed = 2535
